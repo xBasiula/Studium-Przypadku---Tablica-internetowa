@@ -12,4 +12,4 @@ Zadania na początek:
 - Osoby chcące współpracować w repo - proszę o "Issue"
 - Wypełnić ankietę wyboru narzędzia do Kanban
 
-
+Fork Rafała
