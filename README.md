@@ -9,7 +9,7 @@
 
 Zadania na początek:
 - Zrobić kopię rozgałęzioną repo - operacja "Fork"
-- Osoby chcące współpracować w repo - proszę o "Issue"
+- Osoby chcące współpracować w repo - proszę o kontakt ("Issue" nie zadziała) napiszę wkrótce jak.
 - Wypełnić ankietę wyboru narzędzia do Kanban
 
 Fork Rafała
