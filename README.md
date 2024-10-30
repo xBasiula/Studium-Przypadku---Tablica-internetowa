@@ -9,5 +9,5 @@
 
 Zadania na początek:
 - Zrobić kopię rozgałęzioną repo - operacja "Fork"
-- Osoby chcące współpracować w repo - proszę o kontakt ("Issue" nie zadziała) napiszę wkrótce jak.
+- Osoby chcące współpracować w repo - proszę dopisać się w pliku Collaborators/md i dać PullRequest.
 - Wypełnić ankietę wyboru narzędzia do Kanban
