@@ -5,9 +5,8 @@
 - Rózne technologie programistyczne
 - Prowadzenie projektu - zwinne (Agile)
 - Ramy działania (framework) - Kanban
-- Narzędzie do Kanban - do wyboru [ankieta](https://forms.office.com/e/YqXwnX9ekq)
+- Narzędzie do Kanban - MS Planner wewnątrz zespołu MSTeams
 
 Zadania na początek:
 - Zrobić kopię rozgałęzioną repo - operacja "Fork"
 - Osoby chcące współpracować w repo - proszę dopisać się w pliku Collaborators/md i dać PullRequest.
-- Wypełnić ankietę wyboru narzędzia do Kanban
