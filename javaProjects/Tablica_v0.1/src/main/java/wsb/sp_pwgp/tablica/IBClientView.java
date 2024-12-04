@@ -3,12 +3,7 @@
  */
 package wsb.sp_pwgp.tablica;
 
-import java.awt.BorderLayout;
-import java.awt.Button;
-import java.awt.Color;
-import java.awt.EventQueue;
-import java.awt.Frame;
-import java.awt.Panel;
+import java.awt.*;
 
 /**
  * @author kmi
@@ -20,34 +15,85 @@ public class IBClientView extends Frame {
 	
     private IBClientModel model = null;
 
+    private Choice colorPicker;
+
     public IBClientView(IBClientController controller, IBClientModel model, String title) {
     	super(title);
     	this.controller = controller;
     	this.model = model;
     }
-    
+
     public void createView(int colorIndex, int width, int height) {
-    	model.createModel(IBProtocol.colors[colorIndex], width, height);
+        model.createModel(IBProtocol.colors[colorIndex], width, height);
         setBackground(Color.lightGray);
         setLayout(new BorderLayout());
-        
+
+
         add(model, "West");
-        Button b = new Button("clear");
-        b.addActionListener((evt) -> model.clear());
+
+
+        Button clearButton = new Button("clear");
+        clearButton.addActionListener((evt) -> model.clear());
         Panel p100 = new Panel();
-        p100.add(b);
-        b = new Button("logout");
-        b.addActionListener((event) -> controller.forceLogout());
+        p100.add(clearButton);
+
+
+        Button logoutButton = new Button("logout");
+        logoutButton.addActionListener((event) -> controller.forceLogout());
         Panel p200 = new Panel();
-        p200.add(b);
+        p200.add(logoutButton);
+
+
+        colorPicker = new Choice();
+        String[] colorNames = {"Black", "Blue", "Cyan", "Green", "Violet","Orange", "Pink", "Red", "Yellow"};
+        for (int i = 0; i < IBProtocol.colors.length; i++) {
+            colorPicker.add(colorNames[i]);
+        }
+        colorPicker.select(colorIndex);
+        colorPicker.addItemListener((event) -> {
+            int selectedIndex = colorPicker.getSelectedIndex();
+            model.setColor(IBProtocol.colors[selectedIndex]);
+        });
+
+        Choice penPicker = new Choice();
+        String[] penSizes = {"Thin", "Medium", "Thick"};
+        int[] penThickness = {1, 3, 5};
+        for (String pen : penSizes) {
+            penPicker.add(pen);
+        }
+        penPicker.select(0);
+        penPicker.addItemListener((event) -> {
+            int selectedIndex = penPicker.getSelectedIndex();
+            model.setPenThickness(penThickness[selectedIndex]);
+        });
+
+
+        Panel colorPanel = new Panel();
+        colorPanel.add(new Label("Color:"));
+        colorPanel.add(colorPicker);
+
+        Panel penPanel = new Panel();
+        penPanel.add(new Label("Pen:"));
+        penPanel.add(penPicker);
+
+
         Panel p300 = new Panel(new BorderLayout());
         p300.add(p100, "North");
         p300.add(p200, "Center");
-        add(p300, "East");
+        p300.add(colorPanel, "South");
+
+        Panel controlsPanel = new Panel(new BorderLayout());
+        controlsPanel.add(p300, "North");
+        controlsPanel.add(penPanel, "South");
+
+        add(controlsPanel, "East");
         pack();
         EventQueue.invokeLater(() -> setVisible(true));
     }
-    
+
+
+
+
     public void updateTitle(String updateString) {
     	EventQueue.invokeLater(() -> setTitle(getTitle() + ":c" + updateString));
     }

@@ -1,10 +1,6 @@
 package wsb.sp_pwgp.tablica;
 
-import java.awt.Canvas;
-import java.awt.Color;
-import java.awt.EventQueue;
-import java.awt.Graphics;
-import java.awt.Image;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -13,24 +9,31 @@ import java.awt.event.MouseMotionListener;
  * @author kmi
  */
 @SuppressWarnings("serial")
-class IBClientModel extends Canvas implements MouseMotionListener,
-        MouseListener {   
+class IBClientModel extends Canvas implements MouseMotionListener, MouseListener {
     private IBClientController controller = null;
 
     private Image offImage = null;
     private Graphics offGraphics = null;
     private Color color = null;
     private int mouseCurrentX = 0, mouseCurrentY = 0;
+    private int penThickness = 1;
 
     IBClientModel(IBClientController controller) {
-    	this.controller = controller;
+        this.controller = controller;
     }
-    
+
     public void createModel(Color color, int width, int height) {
         this.color = color;
         setSize(width, height);
         addMouseListener(this);
         addMouseMotionListener(this);
+    }
+
+    public void setColor(Color newColor) {
+        this.color = newColor;
+    }
+    public void setPenThickness(int thickness) {
+        this.penThickness = thickness;
     }
 
     @Override
@@ -50,12 +53,13 @@ class IBClientModel extends Canvas implements MouseMotionListener,
     }
 
     synchronized void drawLine(Color c, int x1, int y1, int x2, int y2) {
-    	
-    	EventQueue.invokeLater(() -> {
-    		offGraphics.setColor(c);
-    		offGraphics.drawLine(x1, y1, x2, y2);
-    		repaint();
-    	});
+        EventQueue.invokeLater(() -> {
+            offGraphics.setColor(c);
+            Graphics2D g2d = (Graphics2D) offGraphics;
+            g2d.setStroke(new BasicStroke(penThickness));
+            g2d.drawLine(x1, y1, x2, y2);
+            repaint();
+        });
     }
 
     @Override
@@ -64,11 +68,11 @@ class IBClientModel extends Canvas implements MouseMotionListener,
 
     @Override
     public void mouseDragged(MouseEvent me) {
-    	int tempX = mouseCurrentX;
-    	int tempY = mouseCurrentY;
-    	mouseCurrentX = me.getX(); 
-    	mouseCurrentY = me.getY();
-    	drawLine(color, tempX, tempY, mouseCurrentX, mouseCurrentY);
+        int tempX = mouseCurrentX;
+        int tempY = mouseCurrentY;
+        mouseCurrentX = me.getX();
+        mouseCurrentY = me.getY();
+        drawLine(color, tempX, tempY, mouseCurrentX, mouseCurrentY);
         controller.mouseDragged(mouseCurrentX, mouseCurrentY);
     }
 
@@ -87,17 +91,17 @@ class IBClientModel extends Canvas implements MouseMotionListener,
     @Override
     public void mousePressed(MouseEvent me) {
         controller.mousePressed(
-        		mouseCurrentX = me.getX(), 
-        		mouseCurrentY = me.getY());
+                mouseCurrentX = me.getX(),
+                mouseCurrentY = me.getY());
     }
 
     @Override
     public void mouseReleased(MouseEvent me) {
-    	int mouseLastX = mouseCurrentX;
-    	int mouseLastY = mouseCurrentY;
-        drawLine(color, 
-        		mouseLastX, mouseLastY, 
-        		mouseCurrentX = me.getX(), mouseCurrentY = me.getY());
+        int mouseLastX = mouseCurrentX;
+        int mouseLastY = mouseCurrentY;
+        drawLine(color,
+                mouseLastX, mouseLastY,
+                mouseCurrentX = me.getX(), mouseCurrentY = me.getY());
         controller.mouseReleased(mouseCurrentX, mouseCurrentY);
     }
 
@@ -112,9 +116,9 @@ class IBClientModel extends Canvas implements MouseMotionListener,
             g.drawImage(offImage, 0, 0, this);
         }
     }
-    
+
     @Override
     public String toString() {
-    	return "client, currentMouseX=" + mouseCurrentX + ", mouseCurrentY=" + mouseCurrentY;
+        return "client, currentMouseX=" + mouseCurrentX + ", mouseCurrentY=" + mouseCurrentY;
     }
 }
