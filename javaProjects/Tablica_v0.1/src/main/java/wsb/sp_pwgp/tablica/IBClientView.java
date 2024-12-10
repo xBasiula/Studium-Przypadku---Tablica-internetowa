@@ -89,6 +89,40 @@ public class IBClientView extends Frame {
         add(controlsPanel, "East");
         pack();
         EventQueue.invokeLater(() -> setVisible(true));
+
+        // Panel przycisków
+        Panel buttonPanel = new Panel(new GridLayout(5, 1)); // Kolumna z przyciskami
+        add(buttonPanel, BorderLayout.EAST); // Dodanie do prawej strony
+
+// Przycisk Free Draw
+        Button freeDrawButton = new Button("Free Draw");
+        freeDrawButton.addActionListener((e) -> {
+            model.setFreeDrawing(true); // Włącz tryb Free Draw
+        });
+        buttonPanel.add(freeDrawButton);
+
+// Przycisk rysowania linii
+        Button lineButton = new Button("Draw Line");
+        lineButton.addActionListener((e) -> {
+            model.setDrawingShape("line"); // Włącz tryb rysowania linii
+        });
+        buttonPanel.add(lineButton);
+
+// Przycisk rysowania prostokąta
+        Button rectangleButton = new Button("Draw Rectangle");
+        rectangleButton.addActionListener((e) -> {
+            model.setDrawingShape("rectangle"); // Włącz tryb rysowania prostokąta
+        });
+        buttonPanel.add(rectangleButton);
+
+// Przycisk rysowania koła
+        Button circleButton = new Button("Draw Circle");
+        circleButton.addActionListener((e) -> {
+            model.setDrawingShape("circle"); // Włącz tryb rysowania koła
+        });
+        buttonPanel.add(circleButton);
+
+
     }
 
 
