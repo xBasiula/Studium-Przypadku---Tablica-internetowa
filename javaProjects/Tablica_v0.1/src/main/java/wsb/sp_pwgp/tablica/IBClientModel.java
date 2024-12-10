@@ -4,6 +4,10 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 
 /**
  * @author kmi
@@ -209,5 +213,21 @@ class IBClientModel extends Canvas implements MouseMotionListener, MouseListener
     @Override
     public String toString() {
         return "client, currentMouseX=" + mouseCurrentX + ", mouseCurrentY=" + mouseCurrentY;
+    }
+    public void saveDrawing(String filePath) {
+        int width = getBounds().width;
+        int height = getBounds().height;
+
+        BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        Graphics g = bufferedImage.getGraphics();
+        g.drawImage(offImage, 0, 0, this);
+        g.dispose();
+        try {
+            ImageIO.write(bufferedImage, "png", new File(filePath));
+            System.out.println("Rysunek zapisany jako: " + filePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Błąd podczas zapisywania rysunku.");
+        }
     }
 }
