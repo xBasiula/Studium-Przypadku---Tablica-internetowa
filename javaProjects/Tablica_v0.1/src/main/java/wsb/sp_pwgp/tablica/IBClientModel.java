@@ -17,14 +17,14 @@ class IBClientModel extends Canvas implements MouseMotionListener, MouseListener
     private Color color = null;
     private int mouseCurrentX = 0, mouseCurrentY = 0;
     private int penThickness = 1;
-    private boolean isDrawingShape = false; // Czy użytkownik rysuje kształt
-    private String currentShape = "line";  // Aktualny tryb rysowania (domyślnie linia)
-    private int startX, startY; // Początkowe współrzędne dla rysowania kształtu
-    private int previewX, previewY; // Końcowe współrzędne dla podglądu
-    private boolean freeDrawing = false; // Czy włączony tryb Free Draw
-    private String drawingShape = null; // Rodzaj kształtu do rysowania (line, rectangle, circle)
-    private boolean drawingActive = false; // Czy rozpoczęto rysowanie kształtu
-    private boolean isPreviewActive = false; // Czy podgląd kształtu jest aktywny
+    private boolean isDrawingShape = false;
+    private String currentShape = "line";
+    private int startX, startY;
+    private int previewX, previewY;
+    private boolean freeDrawing = false;
+    private String drawingShape = null;
+    private boolean drawingActive = false;
+    private boolean isPreviewActive = false;
 
     IBClientModel(IBClientController controller) {
         this.controller = controller;
@@ -38,7 +38,7 @@ class IBClientModel extends Canvas implements MouseMotionListener, MouseListener
     }
     public void setDrawingShape(String shape) {
         this.drawingShape = shape;
-        this.freeDrawing = false; // Wyłącz Free Draw
+        this.freeDrawing = false;
         drawingActive = false;
     }
 
@@ -64,7 +64,6 @@ class IBClientModel extends Canvas implements MouseMotionListener, MouseListener
         offGraphics.setColor(Color.red);
         offGraphics.drawRect(0, 0, width - 1, height - 1);
         repaint();
-        // Resetujemy zmienne stanu
         startX = 0;
         startY = 0;
         previewX = 0;
@@ -98,7 +97,7 @@ class IBClientModel extends Canvas implements MouseMotionListener, MouseListener
         } else if (isPreviewActive) {
             previewX = me.getX();
             previewY = me.getY();
-            repaint(); // Podgląd kształtu
+            repaint();
         }
     }
 
@@ -118,7 +117,7 @@ class IBClientModel extends Canvas implements MouseMotionListener, MouseListener
     public void mousePressed(MouseEvent me) {
         startX = me.getX();
         startY = me.getY();
-        drawingActive = true; // Rysowanie rozpoczęte
+        drawingActive = true;
 
         if (freeDrawing) {
             mouseCurrentX = startX;
@@ -128,7 +127,7 @@ class IBClientModel extends Canvas implements MouseMotionListener, MouseListener
 
     @Override
     public void mouseReleased(MouseEvent me) {
-        if (!drawingActive) return; // Nic nie rysujemy
+        if (!drawingActive) return;
 
         int endX = me.getX();
         int endY = me.getY();
@@ -146,7 +145,7 @@ class IBClientModel extends Canvas implements MouseMotionListener, MouseListener
                     break;
             }
         }
-        drawingActive = false; // Rysowanie zakończone
+        drawingActive = false;
     }
     private void drawRectangle(Color c, int x1, int y1, int x2, int y2) {
         int x = Math.min(x1, x2);
@@ -175,8 +174,8 @@ class IBClientModel extends Canvas implements MouseMotionListener, MouseListener
     }
     public void setFreeDrawing(boolean freeDrawing) {
         this.freeDrawing = freeDrawing;
-        this.drawingShape = null; // Wyłącz inne tryby
-        drawingActive = false; // Zerowanie aktywności rysowania
+        this.drawingShape = null;
+        drawingActive = false;
     }
 
     @Override
