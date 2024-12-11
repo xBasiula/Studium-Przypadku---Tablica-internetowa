@@ -5,3 +5,5 @@
 3. Jakub Wawrzeniak 
 4. Rafał Kozioł
 5. Tomasz Gryboś (gitHub TomaszGrybos)
+6. Hubert Peciak
+   
