@@ -69,25 +69,27 @@ public class IBClientController implements Runnable {
         StringTokenizer st = new StringTokenizer(protocolSentence);
         String command = st.nextToken();
         switch (command) {
-            case IBProtocol.LOGGEDIN:
-                int id = Integer.parseInt(st.nextToken());
-                colorIndex = Integer.parseInt(st.nextToken()); // Inicjalizacja colorIndex po zalogowaniu
-                int width = Integer.parseInt(st.nextToken());
-                int height = Integer.parseInt(st.nextToken());
-                view.createView(colorIndex, width, height);
-                view.updateTitle(id + "");
-                break;
-            case IBProtocol.DRAW:
-                view.drawLine(Integer.parseInt(st.nextToken()),
-                        Integer.parseInt(st.nextToken()),
-                        Integer.parseInt(st.nextToken()),
-                        Integer.parseInt(st.nextToken()),
-                        Integer.parseInt(st.nextToken()));
-                break;
-            case IBProtocol.STOP:
-                send(IBProtocol.STOPPED); // no break! - false must be returned
-            case IBProtocol.LOGGEDOUT:
-                return false; // Stop the communication
+
+        case IBProtocol.LOGGEDIN:
+        	int id = Integer.parseInt(st.nextToken());
+            int colorIndex = Integer.parseInt(st.nextToken());
+            int width = Integer.parseInt(st.nextToken());
+            int height = Integer.parseInt(st.nextToken());
+            view.createView(colorIndex, width, height);
+            view.updateTitle(id + "");
+            break;
+        case IBProtocol.DRAW:
+        	view.drawLine(Integer.parseInt(st.nextToken()),
+        			Integer.parseInt(st.nextToken()), 
+        			Integer.parseInt(st.nextToken()), 
+        			Integer.parseInt(st.nextToken()),
+        			Integer.parseInt(st.nextToken()));
+        	break;
+        case IBProtocol.STOP:
+        	send(IBProtocol.STOPPED);
+        case IBProtocol.LOGGEDOUT:
+        	return false;
+
         }
         return true;
     }
