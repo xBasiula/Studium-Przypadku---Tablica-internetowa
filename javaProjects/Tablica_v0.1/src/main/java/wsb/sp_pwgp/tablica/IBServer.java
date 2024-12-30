@@ -79,6 +79,7 @@ public class IBServer extends Frame implements Runnable {
     synchronized void send(String msg) {
     	for (IBService s : clients) { // roześlij do wszystkich klientów
             s.send(msg);
+            System.out.println("Send to all " + msg);
     	}
     }
 
@@ -86,6 +87,7 @@ public class IBServer extends Frame implements Runnable {
     	for (IBService s : clients) { // roześlij do wszystkich klientów
     		if (s != skip) { // oprócz jednego, którego trzeba pominąć...
                 s.send(msg);
+                System.out.println("Send to all with skip " + msg);
     		}
     	}
     }

@@ -106,7 +106,7 @@ public class IBClientView extends Frame {
         EventQueue.invokeLater(() -> setVisible(true));
 
         Panel buttonPanel = new Panel(new GridLayout(5, 1));
-        add(buttonPanel, BorderLayout.EAST);
+        add(buttonPanel, BorderLayout.NORTH);
 
         Button freeDrawButton = new Button("Free Draw");
         freeDrawButton.addActionListener((e) -> {
