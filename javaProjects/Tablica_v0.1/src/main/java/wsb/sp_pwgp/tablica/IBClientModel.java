@@ -13,13 +13,16 @@ import javax.imageio.ImageIO;
  * @author kmi
  */
 @SuppressWarnings("serial")
+
 class IBClientModel extends Canvas implements MouseMotionListener, MouseListener {
+
     private IBClientController controller = null;
 
     private Image offImage = null;
     private Graphics offGraphics = null;
     private Color color = null;
     private int mouseCurrentX = 0, mouseCurrentY = 0;
+
     private int penThickness = 1;
     private boolean isDrawingShape = false;
     private String currentShape = "line";
@@ -29,6 +32,10 @@ class IBClientModel extends Canvas implements MouseMotionListener, MouseListener
     private String drawingShape = null;
     private boolean drawingActive = false;
     private boolean isPreviewActive = false;
+
+    private boolean isEraserActive = false;  // flaga trybu gumki
+
+
 
     IBClientModel(IBClientController controller) {
         this.controller = controller;
@@ -76,9 +83,19 @@ class IBClientModel extends Canvas implements MouseMotionListener, MouseListener
         isDrawingShape = false;
     }
 
+    // Metoda przełączająca tryb gumki
+    public void toggleEraser() {
+        isEraserActive = !isEraserActive;
+    }
+
+
     synchronized void drawLine(Color c, int x1, int y1, int x2, int y2) {
         EventQueue.invokeLater(() -> {
-            offGraphics.setColor(c);
+            if (isEraserActive) {
+                offGraphics.setColor(getBackground());  // kolor tła
+            } else {
+                offGraphics.setColor(c);  // normalny kolor rysowania
+            }
             Graphics2D g2d = (Graphics2D) offGraphics;
             g2d.setStroke(new BasicStroke(penThickness));
             g2d.drawLine(x1, y1, x2, y2);
@@ -86,12 +103,14 @@ class IBClientModel extends Canvas implements MouseMotionListener, MouseListener
         });
     }
 
+
     @Override
     public void mouseMoved(MouseEvent me) {
     }
 
     @Override
     public void mouseDragged(MouseEvent me) {
+
         if (freeDrawing) {
             int tempX = mouseCurrentX;
             int tempY = mouseCurrentY;
@@ -103,6 +122,7 @@ class IBClientModel extends Canvas implements MouseMotionListener, MouseListener
             previewY = me.getY();
             repaint();
         }
+
     }
 
     @Override
@@ -119,6 +139,7 @@ class IBClientModel extends Canvas implements MouseMotionListener, MouseListener
 
     @Override
     public void mousePressed(MouseEvent me) {
+
         startX = me.getX();
         startY = me.getY();
         drawingActive = true;
@@ -127,10 +148,12 @@ class IBClientModel extends Canvas implements MouseMotionListener, MouseListener
             mouseCurrentX = startX;
             mouseCurrentY = startY;
         }
+
     }
 
     @Override
     public void mouseReleased(MouseEvent me) {
+
         if (!drawingActive) return;
 
         int endX = me.getX();
@@ -170,6 +193,7 @@ class IBClientModel extends Canvas implements MouseMotionListener, MouseListener
         offGraphics.setColor(c);
         offGraphics.drawOval(x, y, diameter, diameter);
         repaint();
+
     }
 
     @Override
@@ -230,4 +254,10 @@ class IBClientModel extends Canvas implements MouseMotionListener, MouseListener
             System.out.println("Błąd podczas zapisywania rysunku.");
         }
     }
-}
+
+    public boolean isEraserActive() {
+    {
+
+    }
+        return false;
+    }}
