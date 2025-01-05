@@ -21,6 +21,9 @@ public class IBServer extends Frame implements Runnable {
 
     private Properties props;
 
+    // Deklaracja i inicjalizacja zmiennej `drawingCommands`
+    private ArrayList<String> drawingCommands = new ArrayList<>();
+
     public IBServer(Properties p, String title) {
         super(title);
         props = p;
@@ -76,20 +79,33 @@ public class IBServer extends Frame implements Runnable {
         System.out.println("Client removed. Nc=" + clients.size());
     }
 
-    synchronized void send(String msg) {
-    	for (IBService s : clients) { // roześlij do wszystkich klientów
-            s.send(msg);
-            System.out.println("Send to all " + msg);
-    	}
+    // Metody `send` przesyłające komendy do klientów i przechowujące je w `drawingCommands`
+    synchronized void send(String msg, IBService skip) {
+        for (IBService s : clients) {
+            if (s != skip) {
+                s.send(msg);
+                System.out.println("Sent to client " + s.getId() + ": " + msg);
+            }
+        }
+        if (msg.startsWith(IBProtocol.DRAW)) {
+            drawingCommands.add(msg);
+            System.out.println("Stored DRAW command: " + msg);
+        }
     }
 
-    synchronized void send(String msg, IBService skip) {
-    	for (IBService s : clients) { // roześlij do wszystkich klientów
-    		if (s != skip) { // oprócz jednego, którego trzeba pominąć...
-                s.send(msg);
-                System.out.println("Send to all with skip " + msg);
-    		}
-    	}
+    synchronized void send(String msg) {
+        for (IBService s : clients) {
+            s.send(msg);
+            System.out.println("Sent to client " + s.getId() + ": " + msg);
+        }
+        if (msg.startsWith(IBProtocol.DRAW)) {
+            drawingCommands.add(msg);
+            System.out.println("Stored DRAW command: " + msg);
+        }
+    }
+
+    synchronized ArrayList<String> getDrawingCommands() {
+        return new ArrayList<>(drawingCommands);
     }
 
     private int $lastID = -1;

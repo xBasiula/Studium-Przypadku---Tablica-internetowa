@@ -70,25 +70,29 @@ public class IBClientController implements Runnable {
         String command = st.nextToken();
         switch (command) {
 
-        case IBProtocol.LOGGEDIN:
-        	int id = Integer.parseInt(st.nextToken());
-            int colorIndex = Integer.parseInt(st.nextToken());
-            int width = Integer.parseInt(st.nextToken());
-            int height = Integer.parseInt(st.nextToken());
-            view.createView(colorIndex, width, height);
-            view.updateTitle(id + "");
-            break;
-        case IBProtocol.DRAW:
-        	view.drawLine(Integer.parseInt(st.nextToken()),
-        			Integer.parseInt(st.nextToken()), 
-        			Integer.parseInt(st.nextToken()), 
-        			Integer.parseInt(st.nextToken()),
-        			Integer.parseInt(st.nextToken()));
-        	break;
-        case IBProtocol.STOP:
-        	send(IBProtocol.STOPPED);
-        case IBProtocol.LOGGEDOUT:
-        	return false;
+            case IBProtocol.LOGGEDIN:
+                int id = Integer.parseInt(st.nextToken());
+                colorIndex = Integer.parseInt(st.nextToken());
+                int width = Integer.parseInt(st.nextToken());
+                int height = Integer.parseInt(st.nextToken());
+                view.createView(colorIndex, width, height);
+                view.updateTitle(id + "");
+                System.out.println("Client logged in with id: " + id);
+                break;
+            case IBProtocol.DRAW:
+                int color = Integer.parseInt(st.nextToken());
+                int x1 = Integer.parseInt(st.nextToken());
+                int y1 = Integer.parseInt(st.nextToken());
+                int x2 = Integer.parseInt(st.nextToken());
+                int y2 = Integer.parseInt(st.nextToken());
+                String shape = st.nextToken();
+                view.drawObject(color, x1, y1, x2, y2, shape);
+                System.out.println("Client " + view.getClientId() + " Received DRAW command: color=" + color + ", x1=" + x1 + ", y1=" + y1 + ", x2=" + x2 + ", y2=" + y2);
+                break;
+            case IBProtocol.STOP:
+                send(IBProtocol.STOPPED);
+            case IBProtocol.LOGGEDOUT:
+                return false;
 
         }
         return true;
@@ -101,14 +105,17 @@ public class IBClientController implements Runnable {
 
     void mousePressed(int x, int y) {
         send(IBProtocol.MOUSEPRESSED + " " + x + " " + y);
+        System.out.println("Sent MOUSEPRESSED: " + x + ", " + y);
     }
 
     void mouseDragged(int x, int y) {
         send(IBProtocol.MOUSEDRAGGED + " " + getColorIndex() + " " + x + " " + y);
+        System.out.println("Sent MOUSEDRAGGED: colorIndex=" + getColorIndex() + ", " + x + ", " + y);
     }
 
-    void mouseReleased(int x, int y) {
-        send(IBProtocol.MOUSERELEASED + " " + getColorIndex() + " " + x + " " + y);
+    void mouseReleased(int x, int y, String drawingShape) {
+        send(IBProtocol.MOUSERELEASED + " " + getColorIndex() + " " + x + " " + y + " " + drawingShape);
+        System.out.println("Sent MOUSERELEASED: colorIndex=" + getColorIndex() + ", " + x + ", " + y + " " + drawingShape);
     }
 
     void send(String command) {
