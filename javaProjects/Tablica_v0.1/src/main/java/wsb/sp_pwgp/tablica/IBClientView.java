@@ -17,6 +17,8 @@ public class IBClientView extends Frame {
 
     private Choice colorPicker;
 
+    private String clientId;
+
     public IBClientView(IBClientController controller, IBClientModel model, String title) {
         super(title);
         this.controller = controller;
@@ -159,11 +161,13 @@ public class IBClientView extends Frame {
 
 
     public void updateTitle(String updateString) {
+        setClientId(updateString);
         EventQueue.invokeLater(() -> setTitle(getTitle() + ":c" + updateString));
     }
 
-    public void drawLine(int color, int x1, int y1, int x2, int y2) {
-        model.drawLine(IBProtocol.colors[color], x1, y1, x2, y2);
+    public void drawObject(int color, int x1, int y1, int x2, int y2, String drawingshape) {
+        System.out.println("Client " + getClientId() + " color: " + color );
+        model.drawObject(IBProtocol.colors[color], x1, y1, x2, y2, drawingshape);
     }
 
     @Override
@@ -175,5 +179,13 @@ public class IBClientView extends Frame {
     // Metoda getModel - dodana dla umożliwienia dostępu do modelu w IBClientController
     public IBClientModel getModel() {
         return model;
+    }
+
+    public String getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
     }
 }

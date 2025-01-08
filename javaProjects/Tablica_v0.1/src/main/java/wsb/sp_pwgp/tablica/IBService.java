@@ -25,9 +25,15 @@ public class IBService implements Runnable {
     private BufferedReader input;
     private PrintWriter output;
 
+    public int getId() {
+        return id;
+    }
+
     public IBService(Socket clientSocket, IBServer server) {
         this.server = server;
         this.clientSocket = clientSocket;
+        lastMouseX=10;
+        lastMouseY=10;
     }
 
     void init() throws IOException {
@@ -60,17 +66,31 @@ public class IBService implements Runnable {
                     send(IBProtocol.LOGGEDIN + " " + (id = server.nextID()) + " "
                             + (color = server.nextColor()) + " "
                             + server.boardWidth() + " " + server.boardHeight());
+                    // Przesyłanie wszystkich wcześniejszych komend rysowania do nowego klienta
+                    for (String drawingCommand : server.getDrawingCommands()) {
+                        send(drawingCommand);
+
+                    }
+                    System.out.println("Client " + id + " logged in.");
                     break;
                 case IBProtocol.MOUSEPRESSED:
                     lastMouseX = Integer.parseInt(st.nextToken());
                     lastMouseY = Integer.parseInt(st.nextToken());
+                    System.out.println("Client " + id + " MOUSEPRESSED at (" + lastMouseX + ", " + lastMouseY + ")");
                     break;
                 case IBProtocol.MOUSEDRAGGED:
                 case IBProtocol.MOUSERELEASED:
+                    color = Integer.parseInt(st.nextToken());
                     currentMouseX = Integer.parseInt(st.nextToken());
                     currentMouseY = Integer.parseInt(st.nextToken());
+                    String drawingShape = "line";
+                    if (st.hasMoreTokens()) {
+                        drawingShape = st.nextToken();
+                    }
                     server.send(IBProtocol.DRAW + " " + color + " " + lastMouseX + " " + lastMouseY
-                            + " " + currentMouseX + " " + currentMouseY, this);
+                            + " " + currentMouseX + " " + currentMouseY + " " + drawingShape, this);
+                    System.out.println("Client " + id + " " + command + " from (" + lastMouseX + ", " + lastMouseY + ") " +
+                            "to (" + currentMouseX + ", " + currentMouseY + "), drawingShape = " + drawingShape);
                     lastMouseX = currentMouseX;
                     lastMouseY = currentMouseY;
                     break;
@@ -85,8 +105,9 @@ public class IBService implements Runnable {
                     // Jeśli gumka jest aktywna (colorIndex == ERASER_COLOR), użyj koloru tła do "usuwania"
                     Color drawColor = (colorIndex == IBProtocol.ERASER_COLOR) ? Color.lightGray : IBProtocol.colors[colorIndex];
 
-                    // Przesyłanie polecenia rysowania (lub usuwania) do wszystkich klientów
-                    server.send(IBProtocol.DRAW + " " + colorIndex + " " + x1 + " " + y1 + " " + x2 + " " + y2, this);
+                    String forwardDrawCommand = IBProtocol.DRAW + " " + colorIndex + " " + x1 + " " + y1 + " " + x2 + " " + y2;
+                    server.send(forwardDrawCommand, this);
+                    System.out.println("Server sending DRAW command: " + forwardDrawCommand);
                     break;
                 case IBProtocol.LOGOUT:
                     send(IBProtocol.LOGGEDOUT); // no break!

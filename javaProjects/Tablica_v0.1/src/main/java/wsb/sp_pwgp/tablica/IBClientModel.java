@@ -103,6 +103,26 @@ class IBClientModel extends Canvas implements MouseMotionListener, MouseListener
         });
     }
 
+    synchronized void drawObject(Color c, int startX, int startY, int endX, int endY, String drawingShape) {
+        EventQueue.invokeLater(() -> {
+            if (isEraserActive) {
+                offGraphics.setColor(getBackground());  // kolor tła
+            } else {
+                offGraphics.setColor(c);  // normalny kolor rysowania
+            }
+            switch (drawingShape) {
+                case "line":
+                    drawLine(c, startX, startY, endX, endY);
+                    break;
+                case "rectangle":
+                    drawRectangle(c, startX, startY, endX, endY);
+                    break;
+                case "circle":
+                    drawCircle(c, startX, startY, endX, endY);
+                    break;
+            }
+        });
+    }
 
     @Override
     public void mouseMoved(MouseEvent me) {
@@ -117,6 +137,7 @@ class IBClientModel extends Canvas implements MouseMotionListener, MouseListener
             mouseCurrentX = me.getX();
             mouseCurrentY = me.getY();
             drawLine(color, tempX, tempY, mouseCurrentX, mouseCurrentY);
+            controller.mouseDragged(mouseCurrentX, mouseCurrentY);
         } else if (isPreviewActive) {
             previewX = me.getX();
             previewY = me.getY();
@@ -148,7 +169,7 @@ class IBClientModel extends Canvas implements MouseMotionListener, MouseListener
             mouseCurrentX = startX;
             mouseCurrentY = startY;
         }
-
+        controller.mousePressed(startX, startY);
     }
 
     @Override
@@ -172,6 +193,7 @@ class IBClientModel extends Canvas implements MouseMotionListener, MouseListener
                     break;
             }
         }
+        controller.mouseReleased(endX, endY, drawingShape);
         drawingActive = false;
     }
     private void drawRectangle(Color c, int x1, int y1, int x2, int y2) {
