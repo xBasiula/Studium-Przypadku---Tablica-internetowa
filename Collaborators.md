@@ -8,4 +8,5 @@
 6. Hubert Peciak
 7. Maria Gosa
 8. Dawid Klimczuk
-9.Sebastian Woźniak
+9. Sebastian Woźniak
+10. Oskar Serafińczuk (gihub Sackenn)
