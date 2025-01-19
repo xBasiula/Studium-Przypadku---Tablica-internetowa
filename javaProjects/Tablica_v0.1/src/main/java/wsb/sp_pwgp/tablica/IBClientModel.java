@@ -8,9 +8,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
-import java.awt.Point;
+
 import java.awt.geom.AffineTransform;
-import java.awt.Graphics2D;
 
 /**
  * @author kmi
@@ -38,6 +37,10 @@ class IBClientModel extends Canvas implements MouseMotionListener, MouseListener
     private boolean isEraserActive = false;  // flaga trybu gumki
     private int offsetX = 0;
     private int offsetY = 0;
+
+
+    private static final int SPRAY_RADIUS = 5;
+    private static final int SPRAY_DOTS = 20;
 
     // Rozmiar pojedynczego kafelka (tile)
     private static final int TILE_SIZE = 512;
@@ -80,7 +83,11 @@ class IBClientModel extends Canvas implements MouseMotionListener, MouseListener
 
     public void setDrawingShape(String shape) {
         this.drawingShape = shape;
-        this.freeDrawing = false;
+        if ("spray".equals(shape)) {
+            this.freeDrawing = true;
+        } else {
+            this.freeDrawing = false;
+        }
         drawingActive = false;
     }
 
@@ -163,6 +170,15 @@ class IBClientModel extends Canvas implements MouseMotionListener, MouseListener
         if (isPanning) {
             updatePan(me.getPoint());
             return;
+        }if (freeDrawing && "spray".equals(drawingShape)) {
+            for (int i = 0; i < SPRAY_DOTS; i++) {
+                int offsetX = (int) (Math.random() * SPRAY_RADIUS * 2 - SPRAY_RADIUS);
+                int offsetY = (int) (Math.random() * SPRAY_RADIUS * 2 - SPRAY_RADIUS);
+                int dotX = me.getX() + offsetX;
+                int dotY = me.getY() + offsetY;
+                drawDot(color, dotX, dotY);
+            }
+            controller.mouseDragged(me.getX(), me.getY());
         }
         if (freeDrawing) {
             int tempX = mouseCurrentX;
@@ -230,6 +246,8 @@ class IBClientModel extends Canvas implements MouseMotionListener, MouseListener
                 case "circle":
                     drawCircle(color, startX, startY, endX, endY);
                     break;
+                case "spray":
+                    
             }
         }
         controller.mouseReleased(endX, endY, drawingShape);
@@ -357,4 +375,16 @@ class IBClientModel extends Canvas implements MouseMotionListener, MouseListener
 
         }
         return false;
-    }}
+    }
+    private void drawDot(Color c, int x, int y) {
+        EventQueue.invokeLater(() -> {
+            if (isEraserActive) {
+                offGraphics.setColor(getBackground()); 
+            } else {
+                offGraphics.setColor(c);  
+            }
+            offGraphics.fillRect(x, y, 1, 1);  
+            repaint();
+        });
+    }
+    }
