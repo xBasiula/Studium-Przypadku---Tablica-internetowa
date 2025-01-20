@@ -107,7 +107,7 @@ public class IBClientView extends Frame {
         pack();
         EventQueue.invokeLater(() -> setVisible(true));
 
-        Panel buttonPanel = new Panel(new GridLayout(5, 1));
+        Panel buttonPanel = new Panel(new GridLayout(6, 1));
         add(buttonPanel, BorderLayout.NORTH);
 
         Button freeDrawButton = new Button("Free Draw");
@@ -133,6 +133,12 @@ public class IBClientView extends Frame {
             model.setDrawingShape("circle");
         });
         buttonPanel.add(circleButton);
+        
+        Button sprayButton = new Button("Spray");
+        sprayButton.addActionListener((e) -> {
+            model.setDrawingShape("spray");
+        });
+        buttonPanel.add(sprayButton);
 
 
     }
