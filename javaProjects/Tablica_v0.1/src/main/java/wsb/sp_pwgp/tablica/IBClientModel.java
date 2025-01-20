@@ -90,7 +90,9 @@ class IBClientModel extends Canvas implements MouseMotionListener, MouseListener
         }
         drawingActive = false;
     }
-
+    public Color getColor() {
+        return this.color;
+    }
     public void setColor(Color newColor) {
         this.color = newColor;
     }
@@ -129,9 +131,9 @@ class IBClientModel extends Canvas implements MouseMotionListener, MouseListener
     synchronized void drawLine(Color c, int x1, int y1, int x2, int y2) {
         EventQueue.invokeLater(() -> {
             if (isEraserActive) {
-                offGraphics.setColor(getBackground());  // kolor tła
+                offGraphics.setColor(getBackground());  
             } else {
-                offGraphics.setColor(c);  // normalny kolor rysowania
+                offGraphics.setColor(c);  
             }
             Graphics2D g2d = (Graphics2D) offGraphics;
             g2d.setStroke(new BasicStroke(penThickness));
@@ -143,9 +145,9 @@ class IBClientModel extends Canvas implements MouseMotionListener, MouseListener
     synchronized void drawObject(Color c, int startX, int startY, int endX, int endY, String drawingShape) {
         EventQueue.invokeLater(() -> {
             if (isEraserActive) {
-                offGraphics.setColor(getBackground());  // kolor tła
+                offGraphics.setColor(getBackground());  
             } else {
-                offGraphics.setColor(c);  // normalny kolor rysowania
+                offGraphics.setColor(c);  
             }
             switch (drawingShape) {
                 case "line":
@@ -183,12 +185,12 @@ class IBClientModel extends Canvas implements MouseMotionListener, MouseListener
         if (freeDrawing) {
             int tempX = mouseCurrentX;
             int tempY = mouseCurrentY;
-            mouseCurrentX = me.getX() - offsetX;  // Dostosowanie do przesunięcia
+            mouseCurrentX = me.getX() - offsetX;  
             mouseCurrentY = me.getY() - offsetY;
             drawLine(color, tempX, tempY, mouseCurrentX, mouseCurrentY);
             controller.mouseDragged(mouseCurrentX, mouseCurrentY);
         } else if (isPreviewActive) {
-            previewX = me.getX() - offsetX;  // Dostosowanie do przesunięcia
+            previewX = me.getX() - offsetX;  
             previewY = me.getY() - offsetY;
             repaint();
         }
@@ -208,11 +210,11 @@ class IBClientModel extends Canvas implements MouseMotionListener, MouseListener
 
     @Override
     public void mousePressed(MouseEvent me) {
-        if (me.isControlDown()) {  // Klawisz Control do przesuwania
+        if (me.isControlDown()) {  
             startPan(me.getPoint());
             return;
         }
-        startX = me.getX() - offsetX;  // Dostosowanie do przesunięcia
+        startX = me.getX() - offsetX;  
         startY = me.getY() - offsetY;
         drawingActive = true;
 
@@ -225,14 +227,14 @@ class IBClientModel extends Canvas implements MouseMotionListener, MouseListener
 
     @Override
     public void mouseReleased(MouseEvent me) {
-        if (isPanning) {  // Zakończenie przesuwania, jeśli było aktywne
+        if (isPanning) {  
             stopPan();
             return;
         }
 
         if (!drawingActive) return;
 
-        int endX = me.getX() - offsetX;  // Dostosowanie do przesunięcia
+        int endX = me.getX() - offsetX;  
         int endY = me.getY() - offsetY;
 
         if (drawingShape != null) {
@@ -312,10 +314,10 @@ class IBClientModel extends Canvas implements MouseMotionListener, MouseListener
     public void paint(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
 
-        // Zapisz oryginalną transformację
+        
         AffineTransform originalTransform = g2d.getTransform();
 
-        // Zastosuj przesunięcie
+       
         g2d.translate(offsetX, offsetY);
 
         if (offImage != null) {
@@ -344,7 +346,7 @@ class IBClientModel extends Canvas implements MouseMotionListener, MouseListener
             }
         }
 
-        // Przywróć oryginalną transformację
+      
         g2d.setTransform(originalTransform);
     }
 
