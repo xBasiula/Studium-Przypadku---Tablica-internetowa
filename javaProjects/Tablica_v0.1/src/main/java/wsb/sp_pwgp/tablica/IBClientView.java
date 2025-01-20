@@ -60,7 +60,7 @@ public class IBClientView extends Frame {
 
         Button colorButton = new Button("Choose Color");
         colorButton.addActionListener((event) -> {
-            // Otwórz paletę wyboru koloru
+            
             Color selectedColor = JColorChooser.showDialog(this, "Choose a Color", model.getColor());
             if (selectedColor != null) {
                 model.setColor(selectedColor);
@@ -150,13 +150,13 @@ public class IBClientView extends Frame {
     private void openColorChooser() {
         Color selectedColor = JColorChooser.showDialog(this, "Choose a Color", model.getColor());
         if (selectedColor != null) {
-            model.setColor(selectedColor); // Ustawienie wybranego koloru w modelu
+            model.setColor(selectedColor); 
         }
     }
     private void saveDrawing() {
-        // Wyświetlenie okna dialogowego do zapisu pliku
+       
         FileDialog fileDialog = new FileDialog(this, "Save Drawing", FileDialog.SAVE);
-        fileDialog.setFile("drawing.png"); // Sugerowana nazwa pliku
+        fileDialog.setFile("drawing.png"); 
         fileDialog.setVisible(true);
 
         String directory = fileDialog.getDirectory();
@@ -165,10 +165,10 @@ public class IBClientView extends Frame {
         if (directory != null && file != null) {
             String filePath = directory + file;
             try {
-                model.saveDrawing(filePath); // Wywołanie metody zapisu w modelu
+                model.saveDrawing(filePath); 
                 JOptionPane.showMessageDialog(this, "Drawing saved successfully to:\n" + filePath,
                         "Success", JOptionPane.INFORMATION_MESSAGE);
-            } catch (Exception e) { // Obsługujemy ogólny wyjątek, jeżeli coś pójdzie nie tak
+            } catch (Exception e) { 
                 JOptionPane.showMessageDialog(this, "Error saving drawing:\n" + e.getMessage(),
                         "Error", JOptionPane.ERROR_MESSAGE);
             }
@@ -192,7 +192,7 @@ public class IBClientView extends Frame {
         super.dispose();
     }
 
-    // Metoda getModel - dodana dla umożliwienia dostępu do modelu w IBClientController
+   
     public IBClientModel getModel() {
         return model;
     }
