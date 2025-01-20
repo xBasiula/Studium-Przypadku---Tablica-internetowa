@@ -58,15 +58,47 @@ public class IBClientView extends Frame {
         p200.add(logoutButton);
 
 
-        colorPicker = new Choice();
-        String[] colorNames = {"Black", "Blue", "Cyan", "Green", "Violet","Orange", "Pink", "Red", "Yellow"};
-        for (int i = 0; i < IBProtocol.colors.length; i++) {
-            colorPicker.add(colorNames[i]);
+        Button colorButton = new Button("Choose Color");
+        colorButton.addActionListener((event) -> {
+            // Otwórz paletę wyboru koloru
+            Color selectedColor = JColorChooser.showDialog(this, "Choose a Color", model.getColor());
+            if (selectedColor != null) {
+                model.setColor(selectedColor);
+            }
+        });
+        Panel colorPanel = new Panel();
+        colorPanel.add(colorButton);
+
+        Choice drawingModePicker;
+        drawingModePicker = new Choice();
+        String[] drawingModes = {"Free Draw", "Draw Line", "Draw Rectangle", "Draw Circle", "Spray"};
+        for (String mode : drawingModes) {
+            drawingModePicker.add(mode);
         }
-        colorPicker.select(colorIndex);
-        colorPicker.addItemListener((event) -> {
-            int selectedIndex = colorPicker.getSelectedIndex();
-            model.setColor(IBProtocol.colors[selectedIndex]);
+        drawingModePicker.select(0);
+        drawingModePicker.addItemListener((event) -> {
+            String selectedMode = drawingModePicker.getSelectedItem();
+            switch (selectedMode) {
+                case "Free Draw":
+                    model.setFreeDrawing(true);
+                    break;
+                case "Draw Line":
+                    model.setFreeDrawing(false);
+                    model.setDrawingShape("line");
+                    break;
+                case "Draw Rectangle":
+                    model.setFreeDrawing(false);
+                    model.setDrawingShape("rectangle");
+                    break;
+                case "Draw Circle":
+                    model.setFreeDrawing(false);
+                    model.setDrawingShape("circle");
+                    break;
+                case "Spray":
+                    model.setFreeDrawing(false);
+                    model.setDrawingShape("spray");
+                    break;
+            }
         });
 
         Choice penPicker = new Choice();
@@ -81,14 +113,14 @@ public class IBClientView extends Frame {
             model.setPenThickness(penThickness[selectedIndex]);
         });
 
-
-        Panel colorPanel = new Panel();
-        colorPanel.add(new Label("Color:"));
-        colorPanel.add(colorPicker);
-
         Panel penPanel = new Panel();
         penPanel.add(new Label("Pen:"));
         penPanel.add(penPicker);
+
+        Panel Modepanel = new Panel();
+        Modepanel.add(new Label("Mode:"));
+        Modepanel.add(drawingModePicker);
+
 
 
         Panel p300 = new Panel(new BorderLayout());
@@ -97,52 +129,30 @@ public class IBClientView extends Frame {
         p300.add(ep150, "East");
         p300.add(p200, "South");
 
+        Panel choice = new Panel(new BorderLayout());
+        choice.add(colorPanel, "North");
+        choice.add(Modepanel, "Center");
+        choice.add(penPanel, "South");
+        add(choice, "East");
+
         Panel controlsPanel = new Panel(new BorderLayout());
         controlsPanel.add(p300, "North");
-        controlsPanel.add(colorPanel, "Center");
-        controlsPanel.add(penPanel, "South");
+
+        controlsPanel.add(choice, "Center");
 
         add(controlsPanel, "East");
 
         pack();
         EventQueue.invokeLater(() -> setVisible(true));
 
-        Panel buttonPanel = new Panel(new GridLayout(6, 1));
-        add(buttonPanel, BorderLayout.NORTH);
-
-        Button freeDrawButton = new Button("Free Draw");
-        freeDrawButton.addActionListener((e) -> {
-            model.setFreeDrawing(true);
-        });
-        buttonPanel.add(freeDrawButton);
-
-        Button lineButton = new Button("Draw Line");
-        lineButton.addActionListener((e) -> {
-            model.setDrawingShape("line");
-        });
-        buttonPanel.add(lineButton);
-
-        Button rectangleButton = new Button("Draw Rectangle");
-        rectangleButton.addActionListener((e) -> {
-            model.setDrawingShape("rectangle");
-        });
-        buttonPanel.add(rectangleButton);
-
-        Button circleButton = new Button("Draw Circle");
-        circleButton.addActionListener((e) -> {
-            model.setDrawingShape("circle");
-        });
-        buttonPanel.add(circleButton);
-        
-        Button sprayButton = new Button("Spray");
-        sprayButton.addActionListener((e) -> {
-            model.setDrawingShape("spray");
-        });
-        buttonPanel.add(sprayButton);
-
-
     }
 
+    private void openColorChooser() {
+        Color selectedColor = JColorChooser.showDialog(this, "Choose a Color", model.getColor());
+        if (selectedColor != null) {
+            model.setColor(selectedColor); // Ustawienie wybranego koloru w modelu
+        }
+    }
     private void saveDrawing() {
         // Wyświetlenie okna dialogowego do zapisu pliku
         FileDialog fileDialog = new FileDialog(this, "Save Drawing", FileDialog.SAVE);

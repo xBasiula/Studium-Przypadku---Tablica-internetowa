@@ -90,7 +90,9 @@ class IBClientModel extends Canvas implements MouseMotionListener, MouseListener
         }
         drawingActive = false;
     }
-
+    public Color getColor() {
+        return this.color;
+    }
     public void setColor(Color newColor) {
         this.color = newColor;
     }
