@@ -10,3 +10,4 @@
 8. Dawid Klimczuk
 9. Sebastian Woźniak
 10. Oskar Serafińczuk (gihub Sackenn)
+11. Jan Jesień (github hardkoreJanusz)
